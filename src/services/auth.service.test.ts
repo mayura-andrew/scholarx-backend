@@ -1,5 +1,12 @@
-import { registerUser, loginUser } from './auth.service'
+import {
+  registerUser,
+  loginUser,
+  generateResetToken,
+  resetPassword
+} from './auth.service'
 import { dataSource } from '../configs/dbConfig'
+import Profile from './../entities/profile.entity'
+import { getRepository } from 'typeorm'
 
 jest.mock('bcrypt', () => ({
   hash: jest.fn(
@@ -143,5 +150,48 @@ describe('loginUser', () => {
     expect(result.statusCode).toBe(500)
     expect(result.message).toBe('Internal server error')
     expect(result.uuid).toBeUndefined()
+  })
+})
+
+jest.mock('typeorm', () => ({
+  getRepository: jest.fn().mockReturnValue({
+    findOne: jest.fn(),
+    save: jest.fn()
+  })
+}))
+
+jest.mock('bcrypt', () => ({
+  hash: jest.fn().mockResolvedValue('hashedPassword')
+}))
+
+jest.mock('jsonwebtoken', () => ({
+  sign: jest.fn().mockReturnValue('validToken'),
+  verify: jest.fn().mockReturnValue({ uuid: '123' })
+}))
+
+describe('AuthService', () => {
+  it('should generate a reset token', async () => {
+    getRepository(Profile).findOne = jest.fn().mockResolvedValue({
+      uuid: '123',
+      password: 'password'
+    })
+
+    const result = await generateResetToken('test@example.com')
+
+    expect(result.statusCode).toEqual(200)
+    expect(result.message).toEqual('Token generated')
+    expect(result.token).toBeDefined()
+  })
+
+  it('should reset password', async () => {
+    getRepository(Profile).findOne = jest.fn().mockResolvedValue({
+      uuid: '123',
+      password: 'password'
+    })
+
+    const result = await resetPassword('validToken', 'newPassword')
+
+    expect(result.statusCode).toEqual(200)
+    expect(result.message).toEqual('Password reset successful')
   })
 })
