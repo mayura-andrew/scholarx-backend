@@ -45,7 +45,6 @@ describe('registerUser', () => {
     )
 
     const result = await registerUser('newuser@example.com', 'password123')
-    console.log(result.profile)
     expect(result.message).toBe('Registration successful')
   })
 
@@ -95,7 +94,7 @@ describe('loginUser', () => {
 
     expect(result.statusCode).toBe(401)
     expect(result.message).toBe('Invalid email or password')
-    expect(result.uuid).toBeUndefined()
+    expect(result.user).toBeUndefined()
   })
 
   it('should return unauthorized status code for an incorrect password', async () => {
@@ -117,7 +116,7 @@ describe('loginUser', () => {
 
     expect(result.statusCode).toBe(401)
     expect(result.message).toBe('Invalid email or password')
-    expect(result.uuid).toBeUndefined()
+    expect(result.user).toBeUndefined()
   })
 
   it('should handle an internal server error during login', async () => {
@@ -129,7 +128,7 @@ describe('loginUser', () => {
 
     expect(result.statusCode).toBe(500)
     expect(result.message).toBe('Internal server error')
-    expect(result.uuid).toBeUndefined()
+    expect(result.user).toBeUndefined()
   })
 
   it('should return unauthorized status code for an invalid email or password', async () => {
@@ -149,7 +148,7 @@ describe('loginUser', () => {
 
     expect(result.statusCode).toBe(500)
     expect(result.message).toBe('Internal server error')
-    expect(result.uuid).toBeUndefined()
+    expect(result.user).toBeUndefined()
   })
 })
 
