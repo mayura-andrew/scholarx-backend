@@ -44,7 +44,12 @@ describe('registerUser', () => {
       mockProfileRepository
     )
 
-    const result = await registerUser('newuser@example.com', 'password123')
+    const result = await registerUser(
+      'newuser@example.com',
+      'password123',
+      'John',
+      'Doe'
+    )
     expect(result.message).toBe('Registration successful')
   })
 
@@ -57,7 +62,12 @@ describe('registerUser', () => {
       mockProfileRepository
     )
 
-    const result = await registerUser('existinguser@example.com', 'password123')
+    const result = await registerUser(
+      'existinguser@example.com',
+      'password123',
+      'John',
+      'Doe'
+    )
 
     expect(result.statusCode).toBe(409)
     expect(result.message).toBe('Email already exists')
@@ -69,7 +79,12 @@ describe('registerUser', () => {
       throw new Error('Test repository error')
     })
 
-    const result = await registerUser('testuser@example.com', 'password123')
+    const result = await registerUser(
+      'testuser@example.com',
+      'password123',
+      'John',
+      'Doe'
+    )
 
     expect(result.statusCode).toBe(500)
     expect(result.message).toBe('Internal server error')
