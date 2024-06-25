@@ -158,9 +158,10 @@ export const getEmailContent = async (
         const pdfFileName = await generateCertificate(
           name,
           mentorName ?? '',
-          './src/assets/logo.png',
-          `./src/certificates/${name}_certificate.pdf`
+          `./src/certificates/${name}_certificate.pdf`,
+          './src/assets/logo.png'
         )
+        console.log(pdfFileName)
         return {
           subject: 'Congratulations! You have completed ScholarX',
           message: `Dear ${name},<br /><br />

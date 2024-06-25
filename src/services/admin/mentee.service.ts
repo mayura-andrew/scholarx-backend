@@ -125,7 +125,7 @@ export const updateStatus = async (
         'mentee',
         state,
         mentee.application.firstName as string,
-        mentee.application.lastName as string
+        mentee.application.mentorName as string
       )
 
       console.log(content?.attachment)
