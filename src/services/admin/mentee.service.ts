@@ -110,7 +110,8 @@ export const updateStatus = async (
         profile: {
           uuid: profileUuid
         }
-      }
+      },
+      relations: ['mentor']
     })
 
     // Handle Approve status
@@ -121,11 +122,18 @@ export const updateStatus = async (
       }
     } else {
       await menteeRepository.update({ uuid: menteeId }, { state })
+      const mentorName =
+        mentee.application.firstName + ' ' + mentee.application.lastName
+
+      const menteeName =
+        mentee.mentor.application.firstName +
+        ' ' +
+        mentee.mentor.application.lastName
       const content = await getEmailContent(
         'mentee',
         state,
-        mentee.application.firstName as string,
-        mentee.application.mentorName as string
+        menteeName,
+        mentorName
       )
 
       console.log(content?.attachment)
