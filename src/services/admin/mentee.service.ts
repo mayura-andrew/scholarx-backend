@@ -122,19 +122,10 @@ export const updateStatus = async (
       }
     } else {
       await menteeRepository.update({ uuid: menteeId }, { state })
-      const mentorName =
-        mentee.application.firstName + ' ' + mentee.application.lastName
 
       const menteeName =
-        mentee.mentor.application.firstName +
-        ' ' +
-        mentee.mentor.application.lastName
-      const content = await getEmailContent(
-        'mentee',
-        state,
-        menteeName,
-        mentorName
-      )
+        mentee.application.firstName + ' ' + mentee.application.lastName
+      const content = await getEmailContent('mentee', state, menteeName)
 
       console.log(content?.attachment)
 

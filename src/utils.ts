@@ -6,7 +6,7 @@ import path from 'path'
 import multer from 'multer'
 import ejs from 'ejs'
 import { ApplicationStatus } from './enums'
-import { generateCertificate } from './services/admin/completionPDF'
+import { modifyCertificate } from './services/admin/completionPDF'
 
 export const signAndSetCookie = (res: Response, uuid: string): void => {
   const token = jwt.sign({ userId: uuid }, JWT_SECRET ?? '')
@@ -83,8 +83,7 @@ export const loadTemplate = (
 export const getEmailContent = async (
   type: 'mentor' | 'mentee',
   status: ApplicationStatus,
-  name: string,
-  mentorName?: string
+  name: string
 ): Promise<
   | {
       subject: string
@@ -155,13 +154,11 @@ export const getEmailContent = async (
           Thank you again for considering our program and for the time you invested in your application. We wish you all the best in your future endeavours. `
         }
       case ApplicationStatus.COMPLETED: {
-        const pdfFileName = await generateCertificate(
+        const pdfFileName = await modifyCertificate(
           name,
-          mentorName ?? '',
-          `./src/certificates/${name}_certificate.pdf`,
-          './src/assets/logo.png'
+          './src/assets/certificate.pdf',
+          `./src/certificates/${name}_certificate.pdf`
         )
-        console.log(pdfFileName)
         return {
           subject: 'Congratulations! You have completed ScholarX',
           message: `Dear ${name},<br /><br />
